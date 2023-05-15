@@ -1,0 +1,170 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <link href="styles/main.css" rel="stylesheet" />
+    <link href="styles/invoice.css" rel="stylesheet" />
+    <link href="styles/searchbar.css" rel="stylesheet" />
+ </head>
+
+ <body>
+ <div class="navigation">
+    <ul id="navbar-top">
+     <div class = "navbarImage">
+      <img src="logo.png">
+     </div>
+    <li style= "color:white;padding: 14px 16px;font-weight:1000">Movie Rentals</li>
+    <li><a href="shopRevamp.html">Movies</a></li>
+    <li><a href="basket.html">View Basket</a></li>
+    <li><a href="about.html">Contact Us</a></li>
+    <li style="float:right"><a href="login.html" onclick="return confirm('Are you sure you want to log out?');">Log Out</a></li>
+
+    <div class="searchbox" onclick="openSearch()" onfocusout="closeSearch()" style="float:right">
+      <form onsubmit="submitted()" role="search" method="" id="searchbox-form">
+        <input type="text" autocomplete="off" class="searchbox__input" id="query" placeholder="" />
+         </form>
+         <svg class="searchbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.966 56.966">
+          <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z" />
+        </svg>
+      <div id="searchbox-results"></div>
+      </div>
+     </ul>
+   </div>
+
+
+  <script src="./js/hidebar.js"></script>
+  <script src="./js/searchbar.js"></script>
+
+  <div style="padding:20px;margin-top:30px;height:15px;">
+  </div>
+  <h1>Invoice</h1>
+  <p></p>
+
+      <section class="u-section-2">
+        <div class="u-sheet-1">
+
+          <p>Thank you! Your order details are shown below and will be sent to your registered email address. </p>
+
+          <p class="u-text-2">FROM:<br>Movie Rentals<br>1 University Road<br>Coventry<br>CV4 7AL<br>
+          </p>
+
+          <p class="u-text-3" style="text-align: right; color: #D48166;">Order Number:&nbsp;
+          <span># </span>
+          <span id="payment-order-ref-1"></span>
+          <span id="payment-order-ref-2"></span>
+          <span id="payment-order-ref-3"></span>
+          <span id="payment-order-ref-4"></span>
+          </p>
+
+          <p class="u-text-4" style="text-align: right; color: #D48166;">Date:&nbsp;
+          <span id="payment-date"></span>
+          </p>
+
+          <p class="u-text-5">BILL TO</p>
+          <div class="u-line-1"></div>
+          <p class="u-text-7">
+          <span id="payment-details-title"></span>
+          <span> </span>
+          <span id="payment-details-card-holder-1"></span>
+          <br>
+          <span> Payment Method: Card or PayPal </span>
+          </p>
+
+          <p class="u-text-6">SHIP TO</p>
+          <div class="u-line-2"></div>
+          <p class="u-text-8">
+            <span id="payment-details-card-holder-2"></span>
+            <br>
+            <span id="payment-details-house"></span>
+            <span> </span>
+            <span id="payment-details-street"></span>
+            <br>
+            <span id="payment-details-postcode"></span>
+            <br>
+            <span id="payment-details-city"></span>
+            <br>
+            <span id="payment-details-country"></span>
+          </p>
+
+          <div>
+            <article style="color: white;">
+              <div style="width: 100%; margin: auto; padding: 2em">
+                <table style="width: 90%">
+                  <thead>
+                    <tr style="text-align: left; color: white;">
+                      <th>Movie</th>
+                      <th>Days</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody style="text-align: left; color: white;" id="basket"></tbody>
+                </table>
+                <hr>
+                <div style="text-align: left">
+                  <strong>Total Price:</strong> £<span id="total-price"></span>
+                </div>
+                <hr>
+              </div>
+            </article>
+            <script src="./js/movies.js"></script>
+            <script>
+                const container = document.getElementById("payment-details");
+                  const paymentDetails = JSON.parse(localStorage.getItem("paymentDetails"));
+                const basketContainer = document.getElementById("basket");
+                const basket = JSON.parse(localStorage.getItem("basket") ?? "[]");
+                let totalPrice = 0.0;
+                let itemPrice = 0.0;
+                let date = new Date()
+                let day = date.getDate();
+                let month = date.getMonth()+1;
+                let year = date.getFullYear();
+                let paymentDate = `${day}-${month}-${year}`;
+                let paymenetOrderRef1 = Math.floor(Math.random() * 9) + 1;
+                let paymenetOrderRef2 = Math.floor(Math.random() * 9) + 1;
+                let paymenetOrderRef3 = Math.floor(Math.random() * 9) + 1;
+                let paymenetOrderRef4 = Math.floor(Math.random() * 9) + 1;
+                basket.forEach((basketItem) => {
+                    itemPrice = basketItem.price * basketItem.rentDays;
+                    itemPrice = itemPrice.toFixed(2);
+                  basketContainer.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                        <tr>
+                            <td>${basketItem.name}</td>
+                            <td>${basketItem.rentDays}</td>
+                            <td>£${itemPrice}</td>
+                        </tr>
+                    `
+                  );
+                  totalPrice += basketItem.price * basketItem.rentDays;
+                });
+                totalPrice = totalPrice.toFixed(2);
+                document.getElementById("total-price").textContent = totalPrice;
+                document.getElementById("payment-date").textContent = paymentDate;
+                document.getElementById("payment-order-ref-1").textContent = paymenetOrderRef1;
+                document.getElementById("payment-order-ref-2").textContent = paymenetOrderRef2;
+                document.getElementById("payment-order-ref-3").textContent = paymenetOrderRef3;
+                document.getElementById("payment-order-ref-4").textContent = paymenetOrderRef4;
+                document.getElementById("payment-details-card-holder-1").textContent = paymentDetails.cardholder;
+                document.getElementById("payment-details-card-holder-2").textContent = paymentDetails.cardholder;
+                document.getElementById("payment-details-street").textContent = paymentDetails.street;
+                document.getElementById("payment-details-city").textContent = paymentDetails.city;
+                document.getElementById("payment-details-title").textContent = paymentDetails.title;
+                document.getElementById("payment-details-house").textContent = paymentDetails.house;
+                document.getElementById("payment-details-postcode").textContent = paymentDetails.postcode;
+                document.getElementById("payment-details-country").textContent = paymentDetails.nation;
+                document.getElementById("payment-details-paypal").textContent = paymentDetails.paypal;
+                document.getElementById("payment-details-card").textContent = paymentDetails.card;
+                document.getElementById("payment-details-card-number").textContent = paymentDetails.cardnumber;
+                localStorage.clear();
+             </script>
+           <a href="shopRevamp.html" class="button">Back to Shop</a>
+          </div>
+        </div>
+      </section>
+
+
+ </body>
+</html>

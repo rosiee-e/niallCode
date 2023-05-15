@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Global Finance Admin Login</title>
+    <style>
+      /* Add styles for login form */
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+      input {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+        width: 300px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        width: 200px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #3e8e41;
+      }
+      .error {
+        border: 2px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Global Finance Admin Login</h1>
+    <form>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+      <button type="submit" onclick="login()">Login</button>
+    </form>
+    <script>
+      // Add JavaScript code for login functionality
+      function login() {
+        // Send a multifactor authentication code to the provided email address
+        const email = document.getElementById("email").value;
+        if (email === "") {
+          alert("Please enter your email address.");
+          document.getElementById("email").classList.add("error");
+          return;
+        } else {
+          document.getElementById("email").classList.remove("error");
+          sendMFA(email);
+        }
+
+        // Force the admin to login with a username and password
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        if (username === "") {
+          alert("Please enter your username.");
+          document.getElementById("username").classList.add("error");
+          return;
+        } else {
+          document.getElementById("username").classList.remove("error");
+        }
+
+        if (password === "") {
+          alert("Please enter your password.");
+          document.getElementById("password").classList.add("error");
+          return;
+        } else {
+          document.getElementById("password").classList.remove("error");
+        }
+
+        // Check if the username and password are correct
+        if (username === "admin" && password === "password") {
+          // If correct, ask for the multifactor authentication code
+          const mfa = prompt("Please enter the multifactor authentication code sent to your email:");
+          if (mfa === null || mfa === "") {
+            alert("Multifactor authentication code required.");
+          } else {
+            alert("Login successful!");
+            // Code to redirect to admin dashboard page
+          }
+        } else {
+          alert("Invalid username or password.");
+        }
+      }
+
+      // Function to generate a multifactor authentication code
+      function generateMFA() {
+        const mfa = Math.floor(Math.random() * 1000000).toString().padStart(6, "0");
+        return mfa;
+      }
+      Email.send({
+          SecureToken : "5bd5c7fc-9535-4637-ad29-6874893c3288",
+          To : email,
+          From : "papajuic3@gmail.com",
+          Subject : "Your Multifactor Authentication Token For Global Finance",
+          Body : mfa
+      }).then(
+        message => alert(message)
+      );
+
+      // Function to send a multifactor authentication code to the provided email address
+    </script>
+
+  </body>
+</html>

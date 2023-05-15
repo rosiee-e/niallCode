@@ -1,0 +1,168 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cars:</title>
+    <link href="styles/main.css" rel="stylesheet" />
+    <link href="styles/shopRevamp.css" rel="stylesheet" />
+    <link href="styles/searchbar.css" rel="stylesheet" />
+  </head>
+
+  <body>
+  <div id="basket-overlay">
+    <div id="overlay-container">
+      <!-- You can rent the movie for a maximum of 5 weeks -->
+      <div style="clear: both; padding: 15px 32px;">
+        <label for="rent-days">Days to rent:</label>
+        <input type="number" id="rent-days" min="1" max="35">
+      </div>
+      <a class="button" onclick="addToBasket(currIndex + 1)" style="float: right;">Confirm</a>
+      <a class="button" onclick="cancelBasket()" style="float: left;">Cancel</a>
+    </div>
+  </div>
+
+  <div class="navigation">
+  <ul id="navbar-top">
+  <div class = "navbarImage">
+  <img src="logo.png">
+  </div>
+  <div class="menu">
+    <li class="menu-text",>Global Finance</li>
+    <ul class="menu-items">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <li><a href="shopRevamp.html">Cars</a></li>
+  <li><a href="basket.html">View Basket</a></li>
+  <li><a href="about.html">Contact Us</a></li>
+  <li style="float:right"><a href="login.html" onclick="return confirm('Are you sure you want to log out?');">Log Out</a></li>
+
+  <div class="searchbox" onclick="openSearch()" onfocusout="closeSearch()" style="float:right">
+      <form onsubmit="submitted()" role="search" method="" id="searchbox-form">
+        <input type="text" autocomplete="off" class="searchbox__input" id="query" placeholder="" />
+         </form>
+         <svg class="searchbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.966 56.966">
+          <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z" />
+        </svg>
+      <div id="searchbox-results"></div>
+      </div>
+
+     </ul>
+   </div>
+
+  <script src="./js/searchbar.js"></script>
+  <script src="./js/hidebar.js"></script>
+  <script src="./js/activepage.js"></script>
+
+  </div>
+  <div style="padding:20px;margin-top:30px;height:15px;">
+  </div>
+  <main>
+<h1> Cars </h1>
+<p></p>
+      <article id="movies-list">
+        <div id="movie-l" class="movie-bg">
+            <img class="movie-image"/>
+        </div>
+        <div id="movie-m">
+            <div class="movie-arrow"  onclick="switchMovies(-1)">
+                <img id="arrow-l" src="arrow.png"/>
+            </div>
+            <div id="movie-m-img" onclick="changePage(currIndex)">
+                <img class="movie-image"/>
+            </div>
+            <div class="movie-arrow" onclick="switchMovies(1)">
+                <img id="arrow-r" src="arrow.png"/>
+            </div>
+        </div>
+        <div id="movie-r" class="movie-bg">
+            <img class="movie-image"/>
+        </div>
+      </article>
+    </main>
+
+    <div id="movie-details">
+        <!-- Populated via script -->
+        <h2 style="float: left;"></h2>
+        <img style="float: right;" id="btn-expand-desc" onclick="showDescription()" src="arrow.png"/>
+        <a class="button" style="float: left;" onclick="showOverlay()">Apply for a loan</a>
+        <p style="clear: both;"></p>
+        <br>
+            <p id="movie-release-date"><strong>Release Date: </strong></p>
+            <p id="movie-genre"><strong>Genres: </strong></p>
+            <p id="movie-certificate"><strong>Certificate: </strong></p>
+            <p id="movie-director"><strong>Director: </strong></p>
+            <p id="movie-actors"><strong>Actors: </strong></p>
+            <p id="movie-price"><strong>Price per day: </strong></p>
+    </div>
+
+    <script src="./js/main.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = parseInt(urlParams.get("id"));
+
+      initialise();
+
+      async function initialise() {
+          if (movieId || movieId === 0) {
+          currIndex = movieId;
+
+            if (movieId === 0) {
+              changeImgs(0);
+            }
+            else if (movieId === movies.length - 1) {
+              changeImgs(2);
+            }
+            else {
+              changeImgs(-1);
+            }
+
+            makeDescription();   // Initial Description update
+
+            await sleepMS(400);
+
+            showDescription();
+        }
+        else {
+          changeImgs(0);   // Initial Image update
+          makeDescription();   // Initial Description update
+        }
+      }
+
+      function showOverlay() {
+        document.getElementById("basket-overlay").style.display = "block"; // Show overlay
+      }
+
+      function cancelBasket() {
+        document.getElementById("basket-overlay").style.display = "none"; // Hide overlay
+      }
+
+      function addToBasket(movieId) {
+        // Get the movie from data and add to the basket
+        const movie = movies.find((movie) => movie.id === movieId);
+        if (!movie) return;
+
+        // Get the basket from local storage, or just an empty array if it doesn't exist
+        const basket = JSON.parse(localStorage.getItem("basket") ?? "[]");
+
+        for (let i = 0; i < basket.length; i++) {   // Don't allow the same film to be rented multiple times
+          if (basket[i].id == movieId) {  // Movie already in basket
+            alert("You have already added this movie to your basket")
+            return;
+          }
+        }
+
+        basket.push(movie);
+        localStorage.setItem("basket", JSON.stringify(basket));
+
+        alert("Successfully added to basket!");
+
+        document.getElementById("basket-overlay").style.display = "none"; // Hide overlay
+      }
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sending Mail</title>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <script type="text/javascript">
+      Email.send({
+          SecureToken : "5bd5c7fc-9535-4637-ad29-6874893c3288",
+          To : 'papajuic3@gmail.com',
+          From : "papajuic3@gmail.com",
+          Subject : "Your Multifactor Authentication Token",
+          Body : mfa
+      }).then(
+        message => alert(message)
+      );
+  </script>
+</head>
+
+<body>
+  <form method="post">
+    <input type="button" value="Send Mail"
+        onclick="sendEmail()" />
+  </form>
+</body>
+</html>
